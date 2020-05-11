@@ -1,5 +1,5 @@
 from torch.optim import Adam
-from algorithms.net import LSTMPolicy2
+from .net import LSTMPolicy2
 import torch
 from torch.autograd import Variable
 from torch.nn import functional as F

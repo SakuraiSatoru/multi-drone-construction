@@ -1,7 +1,5 @@
-# from gym import ObservationWrapper
 import numpy as np
-from multiagent.core import World, Entity
-from utils.entities import TargetLandmark, SupplyEntity, ThreatEntity, Drone
+from .entities import TargetLandmark, SupplyEntity, Drone
 from shapely.geometry import Point, LineString
 
 

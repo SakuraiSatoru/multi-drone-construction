@@ -41,7 +41,7 @@ def make_parallel_env(env_id, n_rollout_threads, seed):
 
 def train():
 
-    model_dir = Path('./rl_drone_construction/models') / ENV_ID
+    model_dir = Path('./models') / ENV_ID
     if not model_dir.exists():
         curr_run = 'run1'
     else:

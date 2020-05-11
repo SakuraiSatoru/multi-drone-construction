@@ -9,7 +9,7 @@ from make_env import make_env
 from algorithms.ppo import PPO
 
 def run(config):
-    model_path = (Path('./rl_drone_construction/models') / config.env_id /
+    model_path = (Path('./models') / config.env_id /
                   ('run%i' % config.run_num))
     if config.incremental is not None:
         model_path = model_path / 'incremental' / ('model_ep%i.pt' %

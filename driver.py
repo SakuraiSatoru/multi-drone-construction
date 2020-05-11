@@ -5,14 +5,15 @@ import numpy as np
 from pathlib import Path
 from torch.autograd import Variable
 from make_env import make_env
-from rl_drone_construction.algorithms.ppo import PPO
-from utils.ws_server import WebSocket
+import mdac
+from mdac.algorithms.ppo import PPO
+from vis.utils.ws_server import WebSocket
 
 
 class Simulation(object):
     def __init__(self, config):
         print("initializing env...", end="")
-        model_path = Path('./rl_drone_construction/models/trainstage2/run1/model.pt')
+        model_path = Path(os.path.dirname(mdac.__file__)) / 'models/common/model.pt'
         if config.save:
             self.stream_path = Path('./vis/stream') / config.save
             if os.path.exists(self.stream_path):

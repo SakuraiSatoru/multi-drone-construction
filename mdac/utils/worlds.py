@@ -2,13 +2,13 @@ import json
 import copy
 import numpy as np
 from multiagent.core import World
-from rl_drone_construction.utils.entities import Drone, TargetLandmark, SupplyEntity, SupplyBuffer, ThreatEntity, DockEntity, BrickEntity, SprayEntity
+from mdac.utils.entities import Drone, TargetLandmark, SupplyEntity, SupplyBuffer, ThreatEntity, DockEntity, BrickEntity, SprayEntity
 
 class DroneWorld(World):
 
     def __init__(self, n_lidar_per_agent, mem_frames, dt=0.1):
         super().__init__()
-        from utils.lidar import RayLidar
+        from .lidar import RayLidar
         self.lidar = RayLidar(self, n_lidar_per_agent=n_lidar_per_agent)
         self.n_lidar_per_agent = n_lidar_per_agent
         self.mem_frames = mem_frames
@@ -54,7 +54,7 @@ class DroneConstructionWorld(World):
 
     def __init__(self, n_lidar_per_agent, mem_frames, dt=0.1):
         super().__init__()
-        from utils.lidar import RayLidar
+        from .lidar import RayLidar
         self.lidar = RayLidar(self, n_lidar_per_agent=n_lidar_per_agent)
         self.n_lidar_per_agent = n_lidar_per_agent
         self.mem_frames = mem_frames
