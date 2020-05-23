@@ -83,8 +83,8 @@ class RayLidar(object):
                     pts = [inter]
                 if not len(pts):
                     continue
-                # lidar[i] = min(lidar[i], *[np.linalg.norm(agent.state.p_pos - np.array(p.coords)) - agent.size for p in pts])
-                lidar[i] = min(lidar[i], *[np.linalg.norm(agent.state.p_pos - np.array(p.coords)) for p in pts])
+                lidar[i] = min(lidar[i], *[np.linalg.norm(agent.state.p_pos - np.array(p.coords)) - agent.size for p in pts])
+                # lidar[i] = min(lidar[i], *[np.linalg.norm(agent.state.p_pos - np.array(p.coords)) for p in pts])
         return lidar
 
     def get_ray_lidar(self, agent):
