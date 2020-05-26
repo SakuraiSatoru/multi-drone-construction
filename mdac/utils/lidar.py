@@ -1,6 +1,5 @@
 import numpy as np
 from .entities import TargetLandmark, SupplyEntity, Drone
-from shapely.geometry import Point, LineString
 
 
 class AgentLidar(object):
@@ -58,8 +57,16 @@ class RayLidar(object):
     def dist(entity1, entity2):
         return np.linalg.norm(entity1.state.p_pos - entity2.state.p_pos)
 
+    '''
     def _get_lidar(self, agent, entities):
-        agent_pos = Point(agent.state.p_pos)
+        """
+        Deprecated method.
+        This method uses shapely library to find intersection, which is slower than directly computing circle & ray intersection.
+        Note:
+            1. current model is trained on this method
+            2. this method is not exactly accurate, typically 1e-3 error
+        """
+        from shapely.geometry import Point, LineString
         rays = [LineString([agent.state.p_pos, agent.lidar_range*dir + agent.state.p_pos]) for dir in self.lidar_rays]
         lidar = np.full(self.n_lidar_per_agent, agent.lidar_range)
         for entity in entities:
@@ -85,6 +92,28 @@ class RayLidar(object):
                     continue
                 lidar[i] = min(lidar[i], *[np.linalg.norm(agent.state.p_pos - np.array(p.coords)) - agent.size for p in pts])
                 # lidar[i] = min(lidar[i], *[np.linalg.norm(agent.state.p_pos - np.array(p.coords)) for p in pts])
+        return lidar
+    '''
+
+    def _get_lidar(self, agent, entities):
+        lidar = np.full(self.n_lidar_per_agent, agent.lidar_range)
+        for entity in entities:
+            if agent is entity:
+                continue
+            if hasattr(agent.state, 'p_alt') and hasattr(entity.state, 'p_alt') and isinstance(entity, Drone):
+                if agent.state.p_alt and entity.state.p_alt:
+                    if abs(agent.state.p_alt - entity.state.p_alt) >= 0.1:
+                        continue
+            pos_d = agent.state.p_pos - entity.state.p_pos
+            for i, ray in enumerate(self.lidar_rays):
+                b = np.dot(ray, pos_d) * 2
+                d = b * b - 4 * (np.dot(pos_d, pos_d) - entity.size * entity.size)
+                if d < 0:
+                    continue
+                d = np.sqrt(d)
+                t = (-b - d) / 2
+                if t > 0:
+                    lidar[i] = max(min(lidar[i], t - agent.size), 0.0)
         return lidar
 
     def get_ray_lidar(self, agent):
